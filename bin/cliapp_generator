@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby -W0
+
+$:.unshift( File.join( File.dirname( __FILE__ ), %w[.. lib] ) )
+
+require 'lib_loader'
+
+CLIAppGenerator::CliApplication.new( 
+  Choice.choices[:application], 
+  Choice.choices[:output],
+  Choice.choices[:skell] ).run

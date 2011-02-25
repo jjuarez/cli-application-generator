@@ -1,0 +1,8 @@
+= CLI Application Generator
+
+This is a handy utility for help to generate CLI applications
+
+== To Do
+
+* Testing all stuff
+

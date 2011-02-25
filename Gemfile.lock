@@ -1,0 +1,22 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    abstract (1.0.0)
+    awesome_print (0.3.2)
+    choice (0.1.4)
+    config_context (0.1.0)
+    erubis (2.6.6)
+      abstract (>= 1.0.0)
+    mini_logger (0.1.4)
+      config_context
+    zip (2.0.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  awesome_print
+  choice
+  erubis
+  mini_logger
+  zip
