@@ -1,4 +1,4 @@
-$:.unshift( File.join( File.dirname( __FILE__ ), %w[lib cli_application_generator] ) )
+$:.unshift( File.join( File.dirname( __FILE__ ), 'lib' ) )
 
 begin
   require 'version'
@@ -29,14 +29,14 @@ task :build =>[:clean] do
 
   Jeweler::Tasks.new do |gemspec|
 
-    gemspec.name              = CLIAppGenerator::Version::NAME
-    gemspec.version           = CLIAppGenerator::Version::VERSION
-    gemspec.rubyforge_project = "http://github.com/jjuarez/#{CLIAppGenerator::Version::NAME}"
+    gemspec.name              = Version::NAME
+    gemspec.version           = Version::VERSION
+    gemspec.rubyforge_project = "http://github.com/jjuarez/#{Version::NAME}"
     gemspec.license           = 'MIT License'
     gemspec.summary           = 'A CLI Application generator based on a configurable structure (skell)'
     gemspec.description       = 'A CLI Application generator'
     gemspec.email             = 'javier.juarez@gmail.com'
-    gemspec.homepage          = "http://github.com/jjuarez/#{CLIAppGenerator::Version::NAME}"
+    gemspec.homepage          = "http://github.com/jjuarez/#{Version::NAME}"
     gemspec.authors           = ['Javier Juarez']
     gemspec.files             = Dir[ 'lib/**/*.rb' ] + Dir[ 'test/**/*rb' ] + Dir[ 'skells/*.skell' ]
     gemspec.executables       = ['cli_application_generator']
