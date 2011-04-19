@@ -49,7 +49,7 @@ module CLIAppGenerator
       @output_directory  = output_directory
       @application_name  = application_name
       @id                = id.to_sym
-      @skell_file        = @id
+      @skell_file        = "#{@id}.skell"
       @directories, @elements, @mapper = load_skell_file( File.join( File.dirname( __FILE__ ), %w[.. .. skells] ) )
     end
   end
