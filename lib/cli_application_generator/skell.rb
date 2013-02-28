@@ -4,53 +4,71 @@ require 'yaml'
 require 'erubis'
 
 
-module CLIAppGenerator
+module CLIApplicationGenerator
   
   class Skell
 
     SKELL_SPEC_FILE      = "skell.spec"
     SKELL_TEMPLATES_PATH = "templates"
     
-    attr_reader :directories, :elements
-    
+    attr_reader :directories, :elements, :application
+
     private
-    def load_skell_file( skells_directory )
+    def load_skell_file!
 
-      skell  = {}
-      mapper = {}
-
-      Zip::ZipFile.open( File.join( skells_directory, @skell_file ) ) do |zipfile| 
+      skell  = { }
+      mapper = { }
+      
+      Zip::ZipFile.open(@skell_file) do |zipfile| 
         
-        skell = YAML::load( Erubis::Eruby.new( zipfile.read( SKELL_SPEC_FILE ) ).result( binding( ) ) )
+        spec     = zipfile.read(SKELL_SPEC_FILE)
+        template = Erubis::Eruby.new(spec).result(binding())
+        skell    = YAML::load(template)
         
         skell[:elements].each do |element|
 
           mapper[element] = {
-            :file     => File.join( @output_directory, @application_name, skell[element][:file] ),
-            :template => zipfile.read( File.join( SKELL_TEMPLATES_PATH, skell[element][:template] ) )
+            :file     =>File.join(@output, @application, skell[element][:file]),
+            :template =>zipfile.read(File.join(SKELL_TEMPLATES_PATH, skell[element][:template]))
           } if skell[element]
         end
       end
       
-      [skell[:directories], skell[:elements], mapper]
+      @directories = skell[:directories]
+      @elements    = skell[:elements]
+      @mapper      = mapper
     end
     
     public
-    def template( element )    
-      @mapper[element][:template] if @elements.include?( element )
+    def template(element)    
+      
+      @mapper[element][:template] if @elements.include?(element)
     end
+   
     
-    def file( element )
-      @mapper[element][:file] if @elements.include?( element )
+    def file(element)
+      
+      @mapper[element][:file] if @elements.include?(element)
     end
+   
     
-    def initialize( output_directory, application_name, id )
+    def initialize(output, application, skell_file)
 
-      @output_directory  = output_directory
-      @application_name  = application_name
-      @id                = id.to_sym
-      @skell_file        = "#{@id}.skell"
-      @directories, @elements, @mapper = load_skell_file( File.join( File.dirname( __FILE__ ), %w[.. .. skells] ) )
+      @output      = output
+      @application = application
+      @skell_file  = skell_file
+      
+      load_skell_file!
+      
+      self
+    end
+    
+    def inspect
+      "{ output: #{@output}, application: #{@application}, id: #{@id}, skell_file: #{@skell_file}, directories: #{@directories.inspect}, elements: #{@elements.inspect}, mapper: #{@mapper.inspect} }"
+    end
+    
+    def to_s
+      inspect
     end
   end
 end
