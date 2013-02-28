@@ -1,62 +1,40 @@
-$:.unshift( File.join( File.dirname( __FILE__ ), 'lib' ) )
-
+# encoding: utf-8
+require 'rubygems'
+require 'bundler'
 begin
-  require 'version'
-rescue LoadError => le
-  fail( le.message )
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+
+  exit e.status_code
+end
+require 'rake'
+require 'jeweler'
+require 'rake/testtask'
+
+
+Jeweler::Tasks.new do |gem|
+  
+  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.name        = "cli-application-generator"
+  gem.homepage    = "http://github.com/jjuarez/cli-application-generator"
+  gem.license     = "MIT"
+  gem.summary     = %Q{CLI Application generator}
+  gem.description = %Q{CLI Application generator based on an opinionated configurable structure called skell}
+  gem.email       = "javier.juarez@gmail.com"
+  gem.authors     = ["Javier Juarez"]
+end
+Jeweler::RubygemsDotOrgTasks.new
+
+
+Rake::TestTask.new(:test) do |test|
+  
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = false
 end
 
 
-desc "Clean all temporary artifacts"
-task :clean do
-  begin
-    require 'fileutils'
-    
-    FileUtils.remove_dir( './pkg', true )
-  rescue LoadError=>e
-    fail( e.message )
-  end
-end
-
-
-desc "Build the gem for the project"
-task :build =>[:clean] do
-  begin
-    require 'jeweler'
-  rescue LoadError => e
-    fail( "Jeweler not available. Install it with: gem install jeweler" )
-  end
-
-  Jeweler::Tasks.new do |gemspec|
-
-    gemspec.name              = Version::NAME
-    gemspec.version           = Version::VERSION
-    gemspec.rubyforge_project = "http://github.com/jjuarez/#{Version::NAME}"
-    gemspec.license           = 'MIT License'
-    gemspec.summary           = 'A CLI Application generator based on a configurable structure (skell)'
-    gemspec.description       = 'A CLI Application generator'
-    gemspec.email             = 'javier.juarez@gmail.com'
-    gemspec.homepage          = "http://github.com/jjuarez/#{Version::NAME}"
-    gemspec.authors           = ['Javier Juarez']
-    gemspec.files             = Dir[ 'lib/**/*.rb' ] + Dir[ 'test/**/*rb' ] + Dir[ 'skells/*.skell' ]
-    gemspec.executables       = ['cli_application_generator']
-
-    gemspec.add_dependency( 'choice' ) 
-    gemspec.add_dependency( 'zip' )
-    gemspec.add_dependency( 'erubis' )
-    gemspec.add_dependency( 'mini_logger', '>=0.3.1' )
-  end
-
-  Jeweler::GemcutterTasks.new
-end
-
-
-desc "Testing..."
-task :test =>[:build] do
-  require 'rake/runtest'
-  Rake.run_tests 'test/unit/tc_*.rb'
-end
-
-
-desc "Default task"
-task :default=>[:build]
+task :default => :test
