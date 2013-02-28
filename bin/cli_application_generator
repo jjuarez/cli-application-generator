@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby 
 
-$:.unshift( File.join( File.dirname( __FILE__ ), %w[.. lib] ) )
+$:.unshift File.join(File.dirname(__FILE__), %w{.. lib})
+require 'cli_application_generator'
 
-require 'loader'
 
-CLIAppGenerator::CliApplication.new( 
-  Choice.choices[:application], 
-  Choice.choices[:output],
-  Choice.choices[:skell] ).run
+CLIApplicationGenerator::CLIApplication.new( 
+  :application =>Choice.choices[:application], 
+  :output      =>Choice.choices[:output],
+  :skell       =>Choice.choices[:skell]
+).run()
